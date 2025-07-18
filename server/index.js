@@ -24,7 +24,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/uploads", expr.static("uploads"));
+app.use("/uploads", expr.static("public/uploads"));
 
 const authRoutes = require("./routes/auth");
 const profileRoute = require("./routes/userProfile");

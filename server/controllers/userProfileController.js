@@ -22,7 +22,7 @@ exports.createProfile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ msg: "Image is required" });
     }
-    const imagePath = req.file.path;
+    const imagePath = req.file.path.replace(/^public[\\/]/, "");
 
     const newProfile = new userProfile({
       userName,
@@ -68,9 +68,10 @@ exports.updateProfile = async (req, res) => {
     } = req.body;
     if (!userName || !bio || !skills || !githubLink || !linkedInLink)
       return res.status(400).json({ msg: "All fields are required" });
+    const updatedImagePath=image?.replace(/^public[\\/]/, "")
     const updatedData = await userProfile.findOneAndUpdate(
       { userId: userId },
-      { userName, bio, skills, githubLink, linkedInLink, image, experience },
+      { userName, bio, skills, githubLink, linkedInLink, updatedImagePath, experience },
       { new: true }
     );
 

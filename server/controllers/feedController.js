@@ -10,7 +10,7 @@ exports.createPost = async (req, res) => {
       return res.status(400).json({ error: "All fields required" });
     }
     const userId = req.user.id;
-    const image = req?.file?.path || "";
+    const image = req?.file?.path.replace(/^public[\\/]/, "") || "";
     const user = await userProfile.findOne({ userId }).select("userName image");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
