@@ -28,7 +28,7 @@ exports.registerUser = async (req, res) => {
     // secure: false,
     // sameSite: "Lax",
     secure: true,
-    sameSite: None,
+    sameSite: "None",
     maxAge: 60 * 60 * 1000,
   });
 
