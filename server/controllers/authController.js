@@ -4,25 +4,21 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
-  console.log("in registerUser")
+  console.log("in registerUser");
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ msg: "User already exist" });
-  } 
+  }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = new User({ email: email, password: hashedPassword });
 
   await user.save();
-  const token = jwt.sign(
-    { user: { id:  user._id } },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: "100d",
-    }
-  );
+  const token = jwt.sign({ user: { id: user._id } }, process.env.SECRET_KEY, {
+    expiresIn: "100d",
+  });
   res.cookie("token", token, {
     httpOnly: true,
     // secure: false,
@@ -32,7 +28,9 @@ exports.registerUser = async (req, res) => {
     maxAge: 60 * 60 * 1000,
   });
 
-  return res.status(200).json({ msg: "User registration Successfull", token,userId:user._id });
+  return res
+    .status(200)
+    .json({ msg: "User registration Successfull", token, userId: user._id });
 };
 
 exports.loginUser = async (req, res) => {
@@ -56,7 +54,9 @@ exports.loginUser = async (req, res) => {
           sameSite: "Lax",
           maxAge: 60 * 60 * 1000,
         });
-        return res.status(200).json({ msg: "Login Successfull", token,userData:existingUser });
+        return res
+          .status(200)
+          .json({ msg: "Login Successfull", token, userData: existingUser });
       } else {
         return res.status(400).json({ msg: "Email or password didnt match" });
       }
@@ -71,9 +71,12 @@ exports.loginUser = async (req, res) => {
 
 exports.logoutUser = async (req, res) => {
   res.clearCookie("token", {
-    http: true,
-    sameSite: "strict",
-    secure: false,
+    // http: true,
+    // sameSite: "strict",
+    // secure: false,
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
   });
   res.json({ msg: "Logged out" });
 };
