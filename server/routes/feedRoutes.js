@@ -1,5 +1,5 @@
 const express=require("express");
-const { createPost, toggleLike, getAllPosts, getUserPosts, deletePost, addComment } = require("../controllers/FeedController");
+const { createPost, toggleLike, getAllPosts, getUserPosts, deletePost, addComment } = require("../controllers/feedController");
 const upload = require("../utils/upload");
 const authMiddleware = require("../utils/authMiddleware");
 
