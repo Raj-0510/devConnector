@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
-  console.log("in registerUser");
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -19,14 +18,14 @@ exports.registerUser = async (req, res) => {
   const token = jwt.sign({ user: { id: user._id } }, process.env.SECRET_KEY, {
     expiresIn: "100d",
   });
-  res.cookie("token", token, {
-    httpOnly: true,
-    // secure: false,
-    // sameSite: "Lax",
-    secure: true,
-    sameSite: "None",
-    maxAge: 60 * 60 * 1000,
-  });
+  // res.cookie("token", token, {
+  //   httpOnly: true,
+  //   // secure: false,
+  //   // sameSite: "Lax",
+  //   secure: true,
+  //   sameSite: "None",
+  //   maxAge: 60 * 60 * 1000,
+  // });
 
   return res
     .status(200)
@@ -48,14 +47,14 @@ exports.loginUser = async (req, res) => {
             expiresIn: "100d",
           }
         );
-        res.cookie("token", token, {
-          httpOnly: true,
-          // secure: false,
-          // sameSite: "Lax",
-          secure: true,
-          sameSite: "None",
-          maxAge: 60 * 60 * 1000,
-        });
+        // res.cookie("token", token, {
+        //   httpOnly: true,
+        //   // secure: false,
+        //   // sameSite: "Lax",
+        //   secure: true,
+        //   sameSite: "None",
+        //   maxAge: 60 * 60 * 1000,
+        // });
         return res
           .status(200)
           .json({ msg: "Login Successfull", token, userData: existingUser });
@@ -73,14 +72,14 @@ exports.loginUser = async (req, res) => {
 
 exports.logoutUser = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      // http: true,
-      // sameSite: "strict",
-      // secure: false,
-      httpOnly: true,
-      sameSite: "None",
-      secure: true,
-    });
+    // res.clearCookie("token", {
+    //   // http: true,
+    //   // sameSite: "strict",
+    //   // secure: false,
+    //   httpOnly: true,
+    //   sameSite: "None",
+    //   secure: true,
+    // });
     res.json({ msg: "Logged out" });
   } catch (err) {
     console.log("err>>", err);

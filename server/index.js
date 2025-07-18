@@ -71,7 +71,6 @@ const onlineUsers = new Map();
 io.on("connection", (socket) => {
   socket.on("register", (userId) => {
     onlineUsers.set(userId, socket.id);
-    console.log("in register")
   });
 
   socket.on(
@@ -103,9 +102,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get('/ping', (req, res) => {
-  res.send('pong');
-});
 
 
 // Start server
