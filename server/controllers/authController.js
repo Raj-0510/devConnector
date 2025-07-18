@@ -50,8 +50,10 @@ exports.loginUser = async (req, res) => {
         );
         res.cookie("token", token, {
           httpOnly: true,
-          secure: false,
-          sameSite: "Lax",
+          // secure: false,
+          // sameSite: "Lax",
+          secure: true,
+          sameSite: "None",
           maxAge: 60 * 60 * 1000,
         });
         return res
@@ -70,18 +72,17 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
-  try{
-  res.clearCookie("token", {
-    // http: true,
-    // sameSite: "strict",
-    // secure: false,
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
-  });
-  res.json({ msg: "Logged out" });
-}
-catch(err){
-  console.log("err>>",err)
-}
+  try {
+    res.clearCookie("token", {
+      // http: true,
+      // sameSite: "strict",
+      // secure: false,
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
+    res.json({ msg: "Logged out" });
+  } catch (err) {
+    console.log("err>>", err);
+  }
 };
