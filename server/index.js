@@ -10,6 +10,8 @@ const allowedOrigins = [
   "https://dev-connector-client1.netlify.app", 
 ];
 
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     origin: function (origin, callback) {
