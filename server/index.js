@@ -5,9 +5,20 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:3000",                   
+  "https://dev-connector-client1.netlify.app/", 
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -37,14 +48,21 @@ const Notification = require("./models/Notification");
 
 const server = http.createServer(app);
 
-// Websocket cors
+
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS in Socket.IO"));
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
+
 
 
 const onlineUsers = new Map();
