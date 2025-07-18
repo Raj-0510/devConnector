@@ -18,11 +18,11 @@ const profileRoute = require("./routes/userProfile");
 const allProfiles = require("./routes/allProfiles");
 const feedRoutes = require("./routes/feedRoutes");
 
-mg.connect("mongodb+srv://rajjayswal480:raj5102003>@cluster0.d09rsaa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mg.connect("mongodb+srv://rajjayswal480:raj5102003@cluster0.d09rsaa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => {
     console.log("connected with db");
   })
-  .catch(() => console.log("Error connecting to db"));
+  .catch((err) => console.log("Error connecting to db>>",err));
 app.use(expr.json());
 
 app.use("/api/auth", authRoutes);
