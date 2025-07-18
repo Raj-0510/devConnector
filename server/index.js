@@ -18,7 +18,7 @@ const profileRoute = require("./routes/userProfile");
 const allProfiles = require("./routes/allProfiles");
 const feedRoutes = require("./routes/feedRoutes");
 
-mg.connect("mongodb+srv://rajjayswal480:raj5102003@cluster0.d09rsaa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mg.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("connected with db");
   })
