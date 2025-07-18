@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
+  console.log("in registerUser")
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {

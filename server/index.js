@@ -83,6 +83,11 @@ io.on("connection", (socket) => {
   });
 });
 
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
+
 // Start server
 server.listen(5000, () => {
   console.log("Server with socket running on port 5000");
