@@ -18,11 +18,11 @@ exports.createProfile = async (req, res) => {
         .status(400)
         .json({ msg: "User with this username already exists" });
     }
-
-    if (!req.file) {
-      return res.status(400).json({ msg: "Image is required" });
+    let imagePath = "";
+    if (req.file) {
+      // return res.status(400).json({ msg: "Image is required" });
+      imagePath = req.file.path.replace(/^public[\\/]/, "");
     }
-    const imagePath = req.file.path.replace(/^public[\\/]/, "");
 
     const newProfile = new userProfile({
       userName,
@@ -68,10 +68,18 @@ exports.updateProfile = async (req, res) => {
     } = req.body;
     if (!userName || !bio || !skills || !githubLink || !linkedInLink)
       return res.status(400).json({ msg: "All fields are required" });
-    const updatedImagePath=image?.replace(/^public[\\/]/, "")
+    const updatedImagePath = image?.replace(/^public[\\/]/, "");
     const updatedData = await userProfile.findOneAndUpdate(
       { userId: userId },
-      { userName, bio, skills, githubLink, linkedInLink, updatedImagePath, experience },
+      {
+        userName,
+        bio,
+        skills,
+        githubLink,
+        linkedInLink,
+        updatedImagePath,
+        experience,
+      },
       { new: true }
     );
 
@@ -141,13 +149,7 @@ exports.getProfileByUserName = async (req, res) => {
 };
 
 exports.globalSearch = async (req, res) => {
-  const {
-    type,   
-    q = "", 
-    page = 1,
-    limit = 10,
-    skill,
-  } = req.query;
+  const { type, q = "", page = 1, limit = 10, skill } = req.query;
 
   const skip = (page - 1) * limit;
   const query = {};
@@ -163,7 +165,8 @@ exports.globalSearch = async (req, res) => {
         if (q) query.$text = { $search: q };
         if (skill) query.skills = { $in: [skill] };
 
-        results = await userProfile.find(query, { score: { $meta: "textScore" } })
+        results = await userProfile
+          .find(query, { score: { $meta: "textScore" } })
           .sort({ score: { $meta: "textScore" } })
           .skip(skip)
           .limit(Number(limit));
@@ -171,7 +174,8 @@ exports.globalSearch = async (req, res) => {
 
       case "post":
         if (q) query.$text = { $search: q };
-        results = await feed.find(query, { score: { $meta: "textScore" } })
+        results = await feed
+          .find(query, { score: { $meta: "textScore" } })
           .sort({ score: { $meta: "textScore" } })
           .skip(skip)
           .limit(Number(limit));
@@ -182,7 +186,7 @@ exports.globalSearch = async (req, res) => {
     }
     res.json({ results });
   } catch (err) {
-    console.error("err>>",err)
+    console.error("err>>", err);
     res.status(500).json({ error: "Search failed", message: err.message });
   }
 };
@@ -198,16 +202,16 @@ exports.deleteProfile = async (req, res) => {
       return res.status(404).json({ msg: "Profile not found" });
     }
     await Promise.all([
-      comment.deleteMany({userId:id}),
-      feedModel.deleteMany({userId:id}),
-      User.deleteMany({_id:id}), 
-    ])
+      comment.deleteMany({ userId: id }),
+      feedModel.deleteMany({ userId: id }),
+      User.deleteMany({ _id: id }),
+    ]);
 
     return res.status(200).json({
       msg: "Deleted profile Successfully",
     });
   } catch (err) {
-    console.log("err>>",err)
+    console.log("err>>", err);
     return res.status(500).json({ msg: "Server error" });
   }
 };

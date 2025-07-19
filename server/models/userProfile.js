@@ -33,7 +33,7 @@ const userProfileSchema = new mg.Schema({
     type: String,
     required: true,
   },
-  image: { type: String, required: true },
+  image: { type: String, default:"" },
 
   followers: [{ type: mg.Schema.Types.ObjectId,ref: "userProfile"  }],
 
