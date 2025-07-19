@@ -82,6 +82,6 @@ exports.logoutUser = async (req, res) => {
     // });
     res.json({ msg: "Logged out" });
   } catch (err) {
-    console.log("err>>", err);
+    console.error("err>>", err);
   }
 };

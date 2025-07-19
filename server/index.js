@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
       const receiverSocket = onlineUsers.get(receiverId);
       if (receiverSocket) {
         io.to(receiverSocket).emit("getNotification", {
-          receiverId,
+          senderId,
           type,
           post,
         });
@@ -85,7 +85,6 @@ io.on("connection", (socket) => {
     }
   );
   socket.on("disconnect", () => {
-    console.log("in disconnec");
     for (let [userId, socketId] of onlineUsers.entries()) {
       if (socketId === socket.id) {
         onlineUsers.delete(userId);

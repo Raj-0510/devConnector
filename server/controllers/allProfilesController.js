@@ -56,7 +56,7 @@ exports.followUnfollow = async (req, res) => {
    
     res.status(200).json({ success: true, following: !isFollowing});
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ error: "Failed to update follow status.",success: false });
   }
 };
