@@ -6,16 +6,12 @@ const socketio = require("socket.io");
 const Notification = require("./models/Notification");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 const authRoutes = require("./routes/auth");
 const profileRoute = require("./routes/userProfile");
 const allProfiles = require("./routes/allProfiles");
 const feedRoutes = require("./routes/feedRoutes");
 
-app.use("/api/auth", authRoutes);
-app.use("/api/user-profile", profileRoute);
-app.use("/api/profiles", allProfiles);
-app.use("/api/feed", feedRoutes);
-app.use(cookieParser());
 
 app.set("trust proxy", 1);
 const allowedOrigins = [
@@ -38,10 +34,10 @@ app.use(
 app.use("/uploads", expr.static("public/uploads"));
 
 mg.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("connected with db");
-  })
-  .catch((err) => console.log("Error connecting to db>>", err));
+.then(() => {
+  console.log("connected with db");
+})
+.catch((err) => console.log("Error connecting to db>>", err));
 app.use(expr.json());
 
 const server = http.createServer(app);
@@ -77,7 +73,7 @@ io.on("connection", (socket) => {
         isRead: false,
       });
       await newNotification.save();
-
+      
       const receiverSocket = onlineUsers.get(receiverId);
       if (receiverSocket) {
         io.to(receiverSocket).emit("getNotification", {
@@ -98,6 +94,10 @@ io.on("connection", (socket) => {
     }
   });
 });
+app.use("/api/auth", authRoutes);
+app.use("/api/user-profile", profileRoute);
+app.use("/api/profiles", allProfiles);
+app.use("/api/feed", feedRoutes);
 
 // Start server
 server.listen(5000, () => {
